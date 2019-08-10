@@ -1,5 +1,8 @@
 package com.lux.ge.fileproc.controller;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.lux.ge.fileproc.model.TimeseriesData;
+import com.lux.ge.fileproc.model.TimeseriesType;
 
 @RestController
 @RequestMapping("kafka")
@@ -17,6 +21,8 @@ public class FileProcessorController {
 	
 	private static final String TOPIC_DATA = "data-topic";
 	private static final String TOPIC_NOTIFICATION = "notification-topic";
+	
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
 
 	@Autowired
 	private KafkaTemplate<String, TimeseriesData> kafkaTemplate;
@@ -32,9 +38,15 @@ public class FileProcessorController {
 		return new ModelAndView("healthcheck");
     }
 	
-    @GetMapping("/publish/{message}")
-    public String sendMessage(@PathVariable("message") final String message) {
-    	kafkaTemplate.send(TOPIC_DATA, new TimeseriesData(123, "Test", "Test", 46436546));
+    @GetMapping("/publish/{guid}/{voltage}/{temperature}")
+    public String sendMessage(@PathVariable("guid") final Integer guid, @PathVariable("voltage") final Float voltage, @PathVariable("temperature") final Integer temperature) {
+    	Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+    	TimeseriesData timeseriesData = new TimeseriesData(guid, timestamp.toString(), TimeseriesType.VOLTAGE.getValue(), voltage);
+    	kafkaTemplate.send(TOPIC_DATA, timeseriesData);
+    	timeseriesData.setType(TimeseriesType.TEMPERATURE.getValue());
+    	timeseriesData.setValue(temperature);
+    	kafkaTemplate.send(TOPIC_DATA, timeseriesData);
+    	
     	return "Published successfully";
     }
 

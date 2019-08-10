@@ -1,13 +1,13 @@
 package com.lux.ge.fileproc.model;
 
-public enum TimeseriesDataType {
+public enum TimeseriesType {
 
 	VOLTAGE("voltage"),
 	TEMPERATURE("temperature");
 	
 	private String value;
 	
-	private TimeseriesDataType(String value) {
+	private TimeseriesType(String value) {
 		this.value = value;
 	}
 
