@@ -25,12 +25,12 @@ public class KafkaConsumerConfig {
 		config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 		config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		config.put(ConsumerConfig.GROUP_ID_CONFIG, "ge-1");
+		config.put(ConsumerConfig.GROUP_ID_CONFIG, "ge-ts-data");
 		return new DefaultKafkaConsumerFactory<String, TimeseriesData>(config, new StringDeserializer(), new JsonDeserializer<>(TimeseriesData.class));
 	}
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, TimeseriesData> userKafkaListenerContainerFactory() {
+	public ConcurrentKafkaListenerContainerFactory<String, TimeseriesData> kafkaListenerContainerFactory() {
 		ConcurrentKafkaListenerContainerFactory<String, TimeseriesData> factory = new ConcurrentKafkaListenerContainerFactory<String, TimeseriesData>();
 		factory.setConsumerFactory(tseriesConsumerFactory());
 		return factory;
