@@ -7,6 +7,9 @@ public class TimeseriesData {
 	private String type;
 	private Number value;
 
+	public TimeseriesData() {
+	}
+	
 	public TimeseriesData(int guid, String timestamp, String type, Number value) {
 		super();
 		this.guid = guid;
