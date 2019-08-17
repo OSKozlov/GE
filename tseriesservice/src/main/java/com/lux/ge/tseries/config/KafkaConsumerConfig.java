@@ -26,7 +26,11 @@ public class KafkaConsumerConfig {
 		config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 		config.put(ConsumerConfig.GROUP_ID_CONFIG, "ge-ts-data");
-		return new DefaultKafkaConsumerFactory<String, TimeseriesData>(config, new StringDeserializer(), new JsonDeserializer<>(TimeseriesData.class));
+		
+		JsonDeserializer<TimeseriesData> jsonDeserializer = new JsonDeserializer<>(TimeseriesData.class, false);
+		jsonDeserializer.addTrustedPackages("com.lux.ge.fileproc.model");
+		
+		return new DefaultKafkaConsumerFactory<String, TimeseriesData>(config, new StringDeserializer(), jsonDeserializer);
 	}
 
 	@Bean

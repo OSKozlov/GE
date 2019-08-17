@@ -1,16 +1,23 @@
 package com.lux.ge.tseries.model;
 
+import java.sql.Timestamp;
+
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
+
+@Table("TimeSeriesData")
 public class TimeseriesData {
 
+	@PrimaryKey
 	private int guid;
-	private String timestamp;
+	private Timestamp timestamp;
 	private String type;
-	private Number value;
+	private Float value;
 
 	public TimeseriesData() {
 	}
 	
-	public TimeseriesData(int guid, String timestamp, String type, Number value) {
+	public TimeseriesData(int guid, Timestamp timestamp, String type, Float value) {
 		super();
 		this.guid = guid;
 		this.timestamp = timestamp;
@@ -26,11 +33,11 @@ public class TimeseriesData {
 		this.guid = guid;
 	}
 
-	public String getTimestamp() {
+	public Timestamp getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(String timestamp) {
+	public void setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
 	}
 
@@ -42,11 +49,11 @@ public class TimeseriesData {
 		this.type = type;
 	}
 
-	public Number getValue() {
+	public Float getValue() {
 		return value;
 	}
 
-	public void setValue(Number value) {
+	public void setValue(Float value) {
 		this.value = value;
 	}
 

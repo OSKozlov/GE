@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.3.RELEASE'
+		springBootVersion = '2.1.7.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -27,11 +27,11 @@ repositories {
 
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-web','org.apache.tomcat.embed:tomcat-embed-jasper'
-	,'javax.servlet:jstl')
-	
-	compile "org.apache.kafka:kafka-clients:0.10.2.0"
-    compile "org.springframework.kafka:spring-kafka:1.2.2.RELEASE"
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.7.RELEASE'
+	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.2.8.RELEASE'
+	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.22'
+	compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+    compile group: 'org.springframework.data', name: 'spring-data-cassandra', version: '2.1.10.RELEASE'
         
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
