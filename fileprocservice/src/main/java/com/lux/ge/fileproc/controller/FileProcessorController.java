@@ -39,9 +39,9 @@ public class FileProcessorController {
     }
 	
     @GetMapping("/publish/{guid}/{voltage}/{temperature}")
-    public String sendMessage(@PathVariable("guid") final Integer guid, @PathVariable("voltage") final Float voltage, @PathVariable("temperature") final Integer temperature) {
+    public String sendMessage(@PathVariable("guid") final Integer guid, @PathVariable("voltage") final Float voltage, @PathVariable("temperature") final Float temperature) {
     	Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-    	TimeseriesData timeseriesData = new TimeseriesData(guid, timestamp.toString(), TimeseriesType.VOLTAGE.getValue(), voltage);
+    	TimeseriesData timeseriesData = new TimeseriesData(guid, timestamp, TimeseriesType.VOLTAGE.getValue(), voltage);
     	kafkaTemplate.send(TOPIC_DATA, timeseriesData);
     	timeseriesData.setType(TimeseriesType.TEMPERATURE.getValue());
     	timeseriesData.setValue(temperature);
