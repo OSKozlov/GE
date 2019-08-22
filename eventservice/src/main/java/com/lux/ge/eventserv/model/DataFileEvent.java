@@ -3,12 +3,14 @@ package com.lux.ge.eventserv.model;
 import java.sql.Timestamp;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "DataFileEvent")
+@Table(name = "datafileevent")
 public class DataFileEvent {
 	
+	@Id
 	private int id;
 	
 	private Timestamp timestamp;
