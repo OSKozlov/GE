@@ -8,6 +8,9 @@ public class TimeseriesData {
 	private Timestamp timestamp;
 	private String type;
 	private Float value;
+	
+	public TimeseriesData() {
+	}
 
 	public TimeseriesData(int guid, Timestamp timestamp, String type, Float value) {
 		super();
