@@ -10,6 +10,9 @@ public class DataFileEvent {
 	
 	private String type;
 	
+	public DataFileEvent() {
+	}
+	
 	public DataFileEvent(Timestamp timestamp, String topic, String type) {
 		this.timestamp = timestamp;
 		this.topic = topic;

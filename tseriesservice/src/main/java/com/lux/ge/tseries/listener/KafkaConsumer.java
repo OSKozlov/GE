@@ -23,20 +23,22 @@ public class KafkaConsumer {
 	
 	@KafkaListener(topics = "data-topic", groupId = "ge-ts-data", containerFactory = "kafkaListenerContainerFactory")
 	public void consumeJson(TimeseriesData data) {
-		System.out.println("Consumed JSON Message: " + "guid=" + data.getGuid()  + " timestamp=" + data.getTimestamp() 
+		System.out.println("1 TSERIES SERVICE Consumed JSON Message: " + "guid=" + data.getGuid()  + " timestamp=" + data.getTimestamp() 
 		+ " type=" + data.getType()  + " value=" + data.getValue());
 		
 		timeSeriesService.save(data);
 	}
 
-	@KafkaListener(topics = "notification-topic", groupId = "ge-ts-data", containerFactory = "kafkaListenerContainerFactory")
+	@KafkaListener(topics = "notification-topic", groupId = "ge-ts-data", containerFactory = "kafkaEventListenerContainerFactory")
 	public void consumeJson(DataFileEvent event) {
-		System.out.println("Consumed JSON Message: " + " topic=" + event.getTopic() 
+		System.out.println("2 TSERIES SERVICE Consumed JSON Message: " + " topic=" + event.getTopic() 
 		+ " type=" + event.getType());
 		
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		DataFileEvent evt = new DataFileEvent(timestamp, "notification-topic", "Timeseries Ready");
-		kafkaTemplate.send("notification-topic", evt);
+		if ("Data File Processed".equals(event.getType())) {
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			DataFileEvent evt = new DataFileEvent(timestamp, "notification-topic", "Timeseries Ready");
+			kafkaTemplate.send("notification-topic", evt);
+		}
 	}
 	
 }

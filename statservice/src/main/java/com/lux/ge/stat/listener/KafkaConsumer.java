@@ -10,7 +10,7 @@ public class KafkaConsumer {
 
 	@KafkaListener(topics = "notification-topic", groupId = "ge-ts-data", containerFactory = "kafkaListenerContainerFactory")
 	public void consumeJson(DataFileEvent event) {
-		System.out.println("Consumed JSON Message: " + " topic=" + event.getTopic() 
+		System.out.println("STAT SERVICE Consumed JSON Message: " + " topic=" + event.getTopic() 
 		+ " type=" + event.getType());
 		
 
