@@ -21,7 +21,7 @@ public class KafkaConsumer {
 	@Autowired
 	private KafkaTemplate<String, DataFileEvent> kafkaTemplate;
 	
-	@KafkaListener(topics = "data-topic", groupId = "ge-ts-data", containerFactory = "kafkaListenerContainerFactory")
+	@KafkaListener(topics = "data-topic", groupId = "tseries-group", containerFactory = "kafkaListenerContainerFactory")
 	public void consumeJson(TimeseriesData data) {
 		System.out.println("1 TSERIES SERVICE Consumed JSON Message: " + "guid=" + data.getGuid()  + " timestamp=" + data.getTimestamp() 
 		+ " type=" + data.getType()  + " value=" + data.getValue());
@@ -29,7 +29,7 @@ public class KafkaConsumer {
 		timeSeriesService.save(data);
 	}
 
-	@KafkaListener(topics = "notification-topic", groupId = "ge-ts-data", containerFactory = "kafkaEventListenerContainerFactory")
+	@KafkaListener(topics = "notification-topic", groupId = "tseries-group", containerFactory = "kafkaEventListenerContainerFactory")
 	public void consumeJson(DataFileEvent event) {
 		System.out.println("2 TSERIES SERVICE Consumed JSON Message: " + " topic=" + event.getTopic() 
 		+ " type=" + event.getType());

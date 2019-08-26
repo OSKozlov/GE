@@ -14,7 +14,7 @@ public class KafkaConsumer {
 	@Autowired 
 	private EventService timeSeriesService;
 	
-	@KafkaListener(topics = "notification-topic", groupId = "ge-ts-data", containerFactory = "kafkaListenerContainerFactory")
+	@KafkaListener(topics = "notification-topic", groupId = "eventserv-group", containerFactory = "kafkaListenerContainerFactory")
 	public void consumeJson(DataFileEvent event) {
 		System.out.println("Consumed JSON Message: " + " topic=" + event.getTopic() 
 		+ " type=" + event.getType());

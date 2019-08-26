@@ -26,7 +26,7 @@ public class KafkaConsumerConfig {
 		config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 		config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		config.put(ConsumerConfig.GROUP_ID_CONFIG, "ge-ts-data");
+		config.put(ConsumerConfig.GROUP_ID_CONFIG, "tseries-group");
 		
 		JsonDeserializer<TimeseriesData> jsonDeserializer = new JsonDeserializer<>(TimeseriesData.class, false);
 		jsonDeserializer.addTrustedPackages("com.lux.ge.fileproc.model");
@@ -47,7 +47,7 @@ public class KafkaConsumerConfig {
 		config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 		config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		config.put(ConsumerConfig.GROUP_ID_CONFIG, "ge-ts-data");
+		config.put(ConsumerConfig.GROUP_ID_CONFIG, "tseries-group");
 		
 		JsonDeserializer<DataFileEvent> jsonDeserializer = new JsonDeserializer<>(DataFileEvent.class, false);
 		jsonDeserializer.addTrustedPackages("com.lux.ge.fileproc.model");
