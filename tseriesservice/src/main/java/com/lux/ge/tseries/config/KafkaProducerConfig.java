@@ -12,24 +12,26 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
+import com.lux.ge.tseries.model.DataFileEvent;
+
 
 @Configuration
 public class KafkaProducerConfig {
 
 	@Bean
-	public ProducerFactory<String, String> producerFactory() {
+	public ProducerFactory<String, DataFileEvent> producerEventFactory() {
 		Map<String, Object> config = new HashMap();
 		
 		config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 		config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 		
-		return new DefaultKafkaProducerFactory<String, String>(config);
+		return new DefaultKafkaProducerFactory<String, DataFileEvent>(config);
 	}
 
 	@Bean
-	public KafkaTemplate<String, String> kafkaTemplate() {
-		return new KafkaTemplate<String, String>(producerFactory());
+	public KafkaTemplate<String, DataFileEvent> kafkaEventTemplate() {
+		return new KafkaTemplate<String, DataFileEvent>(producerEventFactory());
 	}
 
 }

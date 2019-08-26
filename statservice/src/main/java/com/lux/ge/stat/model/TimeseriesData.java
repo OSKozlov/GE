@@ -1,14 +1,9 @@
-package com.lux.ge.tseries.model;
+package com.lux.ge.stat.model;
 
 import java.sql.Timestamp;
 
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
-
-@Table("TimeSeriesData")
 public class TimeseriesData {
 
-	@PrimaryKey
 	private int guid;
 	private Timestamp timestamp;
 	private String type;

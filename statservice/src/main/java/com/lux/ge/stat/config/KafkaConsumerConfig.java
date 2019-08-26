@@ -1,4 +1,4 @@
-package com.lux.ge.tseries.config;
+package com.lux.ge.stat.config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,36 +13,15 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-import com.lux.ge.tseries.model.TimeseriesData;
-import com.lux.ge.tseries.model.DataFileEvent;
+import com.lux.ge.stat.model.DataFileEvent;
+
 
 @Configuration
 @EnableKafka
 public class KafkaConsumerConfig {
-
-	@Bean
-	public ConsumerFactory<String, TimeseriesData> tseriesConsumerFactory() {
-		Map<String, Object> config = new HashMap<>();
-		config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-		config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		config.put(ConsumerConfig.GROUP_ID_CONFIG, "ge-ts-data");
-		
-		JsonDeserializer<TimeseriesData> jsonDeserializer = new JsonDeserializer<>(TimeseriesData.class, false);
-		jsonDeserializer.addTrustedPackages("com.lux.ge.fileproc.model");
-		
-		return new DefaultKafkaConsumerFactory<String, TimeseriesData>(config, new StringDeserializer(), jsonDeserializer);
-	}
-
-	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, TimeseriesData> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, TimeseriesData> factory = new ConcurrentKafkaListenerContainerFactory<String, TimeseriesData>();
-		factory.setConsumerFactory(tseriesConsumerFactory());
-		return factory;
-	}
 	
 	@Bean
-	public ConsumerFactory<String, DataFileEvent> eventConsumerFactory() {
+	public ConsumerFactory<String, DataFileEvent> tseriesConsumerFactory() {
 		Map<String, Object> config = new HashMap<>();
 		config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 		config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -51,14 +30,15 @@ public class KafkaConsumerConfig {
 		
 		JsonDeserializer<DataFileEvent> jsonDeserializer = new JsonDeserializer<>(DataFileEvent.class, false);
 		jsonDeserializer.addTrustedPackages("com.lux.ge.fileproc.model");
+		jsonDeserializer.addTrustedPackages("com.lux.ge.tseries.model");
 		
 		return new DefaultKafkaConsumerFactory<String, DataFileEvent>(config, new StringDeserializer(), jsonDeserializer);
 	}
 
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, DataFileEvent> kafkaEventListenerContainerFactory() {
+	public ConcurrentKafkaListenerContainerFactory<String, DataFileEvent> kafkaListenerContainerFactory() {
 		ConcurrentKafkaListenerContainerFactory<String, DataFileEvent> factory = new ConcurrentKafkaListenerContainerFactory<String, DataFileEvent>();
-		factory.setConsumerFactory(eventConsumerFactory());
+		factory.setConsumerFactory(tseriesConsumerFactory());
 		return factory;
 	}
 
