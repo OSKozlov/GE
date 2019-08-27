@@ -66,7 +66,6 @@ public class DirectoryWatchService {
 		int delay = 5000; // delay for 5 sec.
 		int interval = 1000; // iterate every sec.
 		Timer timer = new Timer();
-		final int i = 0;
 		
 		try {
 			watchKey = service.take();
