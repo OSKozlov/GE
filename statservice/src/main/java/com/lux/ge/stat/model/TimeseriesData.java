@@ -2,12 +2,18 @@ package com.lux.ge.stat.model;
 
 import java.sql.Timestamp;
 
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
+
+@Table("TimeSeriesData")
 public class TimeseriesData {
 
+	@PrimaryKey
 	private int guid;
 	private Timestamp timestamp;
 	private String type;
 	private Float value;
+	private String fileName;
 
 	public TimeseriesData() {
 	}
@@ -50,6 +56,14 @@ public class TimeseriesData {
 
 	public void setValue(Float value) {
 		this.value = value;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 }

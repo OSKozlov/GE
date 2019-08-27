@@ -12,14 +12,14 @@ public class TimeSeriesServiceImpl implements TimeSeriesService {
 	@Autowired
 	private TSeriesRepository repository; 
 
-	/*
-	 * @Override public TimeseriesData getById(String id) { return
-	 * repository.findById(id); }
-	 */
-
 	@Override
 	public TimeseriesData save(TimeseriesData data) {
 		return repository.save(data);
+	}
+
+	@Override
+	public TimeseriesData findByFileName(String fileName) {
+		return repository.findByFileName(fileName);
 	}
 
 }

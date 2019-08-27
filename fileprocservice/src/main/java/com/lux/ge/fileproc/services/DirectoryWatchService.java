@@ -6,49 +6,68 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+import com.lux.ge.fileproc.model.DataFileEvent;
+import com.lux.ge.fileproc.model.DataFileEventType;
 import com.lux.ge.fileproc.model.TimeseriesData;
 
 /**
  * This class implements watch service that observe folder
  *
  */
+@Service
 public class DirectoryWatchService {
 
 	private WatchService service;
 	private Map<WatchKey, Path> keys;
 	private Path dir;
-	private List<TimeseriesData> timeseriesData;
+	private Queue<TimeseriesData> timeseriesData;
+	
+	
+	private static final String TOPIC_DATA = "data-topic";
+	private static final String TOPIC_NOTIFICATION = "notification-topic";
+	
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
 
-	private static DirectoryWatchService instance;
+	@Autowired
+	private KafkaTemplate<String, TimeseriesData> kafkaTemplate;
+	
+	@Autowired
+	private KafkaTemplate<String, DataFileEvent> kafkaEventTemplate;
 	
 	private static Logger logger = Logger.getLogger(DirectoryWatchService.class.getName());
 
-	private DirectoryWatchService(Path dir) {
-		this.dir = dir;
+	public DirectoryWatchService() {
+		this.dir = Paths.get("files");
 		registerDirectory(dir);
 	}
 	
-	public static DirectoryWatchService getInstance(Path dir) {
-		if (instance == null) {
-			instance = new DirectoryWatchService(dir);
-		}
-		return instance;
-	}
-
 	public void processEvents() {
 		WatchKey watchKey;
+		int delay = 5000; // delay for 5 sec.
+		int interval = 1000; // iterate every sec.
+		Timer timer = new Timer();
+		final int i = 0;
+		
 		try {
 			watchKey = service.take();
 			do {
@@ -58,17 +77,28 @@ public class DirectoryWatchService {
 					Path eventPath = (Path) event.context();
 					System.out.println(eventDir + ": " + kind + ": " + eventPath);
 					if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+						sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.NEW_DATA_FILE_PROCESSING.getValue());
+						
 						timeseriesData = readFile();
+
+						timer.scheduleAtFixedRate(new TimerTask() {
+							public void run() {
+								TimeseriesData data = timeseriesData.poll();
+								if (data != null) {
+									kafkaTemplate.send(TOPIC_DATA, data);
+								} else {
+									sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.DATA_FILE_PROCESSED.getValue());
+									timer.cancel();
+								}
+							}
+						}, delay, interval);
+						
 					}
 				}
 			} while (watchKey.reset());
-		} catch (InterruptedException e) {
+		} catch (InterruptedException | IOException e) {
 			logger.log(Level.WARNING, "Interrupted error occured while watching folder.", e);
 		}
-	}
-
-	public List<TimeseriesData> getTimeseriesData() {
-		return timeseriesData;
 	}
 
 	private void registerDirectory(Path path) {
@@ -82,9 +112,9 @@ public class DirectoryWatchService {
 		}
 	}
 	
-	private List<TimeseriesData> readFile() {
-		List<TimeseriesData> list = new ArrayList<>();
-		BufferedReader bufferedReader;
+	private Queue<TimeseriesData> readFile() throws IOException {
+		Queue<TimeseriesData> queue = new LinkedList<>();
+		BufferedReader bufferedReader = null;
 		try {
 			bufferedReader = new BufferedReader(new FileReader(dir + File.separator + "ge.txt"));
 			String line = bufferedReader.readLine();
@@ -98,14 +128,27 @@ public class DirectoryWatchService {
 					timeseriesData.setTimestamp(Timestamp.valueOf(splitline[1]));
 					timeseriesData.setType(splitline[2]);
 					timeseriesData.setValue(Float.valueOf(splitline[3]));
-					list.add(timeseriesData);
+					timeseriesData.setFileName("ge.txt");
+					queue.add(timeseriesData);
 				}
 			}
-			return list;
+			return queue;
 		} catch (IOException e) {
 			logger.log(Level.WARNING, "Error occured while reading folder.", e);
+		} finally {
+			if (bufferedReader != null) {
+				bufferedReader.close();
+			}
 		}
 		return null;
 	}
+	
+    private void sendNotificationEvent(String topic, String eventType) {
+    	Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+    	
+    	DataFileEvent event = new DataFileEvent(timestamp, topic, eventType);
+    	kafkaEventTemplate.send(topic, event);
+    }
 
+    
 }
