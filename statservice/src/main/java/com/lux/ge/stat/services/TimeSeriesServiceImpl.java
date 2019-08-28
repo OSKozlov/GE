@@ -15,6 +15,11 @@ public class TimeSeriesServiceImpl implements TimeSeriesService {
 	@Override
 	public Iterable<TimeseriesData> findAll() {
 		return repository.findAll();
+	}
+
+	@Override
+	public TimeseriesData findByFileName(String searchTerm) {
+		return repository.findByFileName(searchTerm);
 	} 
 
 }

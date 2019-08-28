@@ -6,4 +6,6 @@ public interface TimeSeriesService {
 	
 	Iterable<TimeseriesData> findAll();
 	
+	TimeseriesData findByFileName(String searchTerm);
+	
 }
