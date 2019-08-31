@@ -42,11 +42,9 @@ public class DirectoryWatchService {
 	private Path dir;
 	private Queue<TimeseriesData> timeseriesData;
 	
-	
 	private static final String TOPIC_DATA = "data-topic";
 	private static final String TOPIC_NOTIFICATION = "notification-topic";
 	
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
 
 	@Autowired
 	private KafkaTemplate<String, TimeseriesData> kafkaTemplate;
@@ -74,11 +72,11 @@ public class DirectoryWatchService {
 				for (WatchEvent<?> event : watchKey.pollEvents()) {
 					WatchEvent.Kind<?> kind = event.kind();
 					Path eventPath = (Path) event.context();
-					System.out.println(eventDir + ": " + kind + ": " + eventPath);
+					System.out.println(eventDir + ": " + kind + ": " + eventPath.getFileName().toString());
 					if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-						sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.NEW_DATA_FILE_PROCESSING.getValue());
+						sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.NEW_DATA_FILE_PROCESSING.getValue(), eventPath.getFileName().toString());
 						
-						timeseriesData = readFile();
+						timeseriesData = readFile(eventPath.getFileName().toString());
 
 						timer.scheduleAtFixedRate(new TimerTask() {
 							public void run() {
@@ -86,7 +84,7 @@ public class DirectoryWatchService {
 								if (data != null) {
 									kafkaTemplate.send(TOPIC_DATA, data);
 								} else {
-									sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.DATA_FILE_PROCESSED.getValue());
+									sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.DATA_FILE_PROCESSED.getValue(), eventPath.getFileName().toString());
 									timer.cancel();
 								}
 							}
@@ -111,14 +109,13 @@ public class DirectoryWatchService {
 		}
 	}
 	
-	private Queue<TimeseriesData> readFile() throws IOException {
+	private Queue<TimeseriesData> readFile(String fileName) throws IOException {
 		Queue<TimeseriesData> queue = new LinkedList<>();
 		BufferedReader bufferedReader = null;
 		try {
-			bufferedReader = new BufferedReader(new FileReader(dir + File.separator + "ge.txt"));
+			bufferedReader = new BufferedReader(new FileReader(dir + File.separator + fileName));
 			String line = bufferedReader.readLine();
 			while (line != null) {
-				System.out.println(line);
 				line = bufferedReader.readLine();
 				if (line != null) {
 					String[] splitline = line.split(",");
@@ -127,7 +124,7 @@ public class DirectoryWatchService {
 					timeseriesData.setTimestamp(Timestamp.valueOf(splitline[1]));
 					timeseriesData.setType(splitline[2]);
 					timeseriesData.setValue(Float.valueOf(splitline[3]));
-					timeseriesData.setFileName("ge.txt");
+					timeseriesData.setFileName(fileName);
 					queue.add(timeseriesData);
 				}
 			}
@@ -142,10 +139,10 @@ public class DirectoryWatchService {
 		return null;
 	}
 	
-    private void sendNotificationEvent(String topic, String eventType) {
+    private void sendNotificationEvent(String topic, String eventType, String fileName) {
     	Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     	
-    	DataFileEvent event = new DataFileEvent(timestamp, topic, eventType);
+    	DataFileEvent event = new DataFileEvent(timestamp, topic, eventType, fileName);
     	kafkaEventTemplate.send(topic, event);
     }
 

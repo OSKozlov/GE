@@ -10,13 +10,16 @@ public class DataFileEvent {
 	
 	private String type;
 	
+	private String filename;
+	
 	public DataFileEvent() {
 	}
 	
-	public DataFileEvent(Timestamp timestamp, String topic, String type) {
+	public DataFileEvent(Timestamp timestamp, String topic, String type, String fileName) {
 		this.timestamp = timestamp;
 		this.topic = topic;
 		this.type = type;
+		this.filename = fileName;
 	}
 	
 	public Timestamp getTimestamp() {
@@ -41,6 +44,14 @@ public class DataFileEvent {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getFileName() {
+		return filename;
+	}
+
+	public void setFileName(String fileName) {
+		this.filename = fileName;
 	}
 
 }

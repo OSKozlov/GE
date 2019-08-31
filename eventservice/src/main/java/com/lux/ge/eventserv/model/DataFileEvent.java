@@ -21,6 +21,8 @@ public class DataFileEvent {
 	private String topic;
 	
 	private String type;
+	
+	private String filename;
 
 	public int getId() {
 		return id;
@@ -52,6 +54,14 @@ public class DataFileEvent {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getFileName() {
+		return filename;
+	}
+
+	public void setFileName(String fileName) {
+		this.filename = fileName;
 	}
 
 }
