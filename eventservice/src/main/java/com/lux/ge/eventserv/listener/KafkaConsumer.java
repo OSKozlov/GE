@@ -12,14 +12,14 @@ public class KafkaConsumer {
 	
 	
 	@Autowired 
-	private EventService timeSeriesService;
+	private EventService eventService;
 	
 	@KafkaListener(topics = "notification-topic", groupId = "eventserv-group", containerFactory = "kafkaListenerContainerFactory")
 	public void consumeJson(DataFileEvent event) {
 		System.out.println("Consumed JSON Message: " + " topic=" + event.getTopic() 
-		+ " type=" + event.getType());
+		+ " type=" + event.getType() + " file = " + event.getFileName());
 		
-		timeSeriesService.save(event);
+		eventService.save(event);
 	}
 
 }

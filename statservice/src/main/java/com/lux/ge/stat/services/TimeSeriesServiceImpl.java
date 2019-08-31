@@ -3,23 +3,25 @@ package com.lux.ge.stat.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lux.ge.stat.model.StatData;
 import com.lux.ge.stat.model.TimeseriesData;
+import com.lux.ge.stat.repository.StatDataRepository;
 import com.lux.ge.stat.repository.TSeriesRepository;
 
 @Service
 public class TimeSeriesServiceImpl implements TimeSeriesService {
 	
 	@Autowired
-	private TSeriesRepository repository;
-
+	private TSeriesRepository tSeriesRepository;
+	
 	@Override
 	public Iterable<TimeseriesData> findAll() {
-		return repository.findAll();
+		return tSeriesRepository.findAll();
 	}
 
 	@Override
 	public TimeseriesData findByFileName(String searchTerm) {
-		return repository.findByFileName(searchTerm);
-	} 
+		return tSeriesRepository.findByFileName(searchTerm);
+	}
 
 }

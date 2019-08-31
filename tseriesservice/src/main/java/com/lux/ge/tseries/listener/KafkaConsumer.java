@@ -36,7 +36,7 @@ public class KafkaConsumer {
 		
 		if ("Data File Processed".equals(event.getType())) {
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			DataFileEvent evt = new DataFileEvent(timestamp, "notification-topic", "Timeseries Ready");
+			DataFileEvent evt = new DataFileEvent(timestamp, "notification-topic", "Timeseries Ready", event.getFileName());
 			kafkaTemplate.send("notification-topic", evt);
 		}
 	}
