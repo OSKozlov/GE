@@ -61,8 +61,8 @@ public class DirectoryWatchService {
 	
 	public void processEvents() {
 		WatchKey watchKey;
-		int delay = 5000; // delay for 5 sec.
-		int interval = 1000; // iterate every sec.
+		int delay = 5000;
+		int interval = 1000;
 		Timer timer = new Timer();
 		
 		try {

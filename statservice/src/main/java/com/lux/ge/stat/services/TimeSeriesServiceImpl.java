@@ -3,9 +3,7 @@ package com.lux.ge.stat.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lux.ge.stat.model.StatData;
 import com.lux.ge.stat.model.TimeseriesData;
-import com.lux.ge.stat.repository.StatDataRepository;
 import com.lux.ge.stat.repository.TSeriesRepository;
 
 @Service

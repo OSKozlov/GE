@@ -1,6 +1,8 @@
 package com.lux.ge.tseries.listener;
 
 import java.sql.Timestamp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -14,6 +16,7 @@ import com.lux.ge.tseries.services.TimeSeriesService;
 @Service
 public class KafkaConsumer {
 	
+	private static Logger logger = Logger.getLogger(KafkaConsumer.class.getName());
 	
 	@Autowired 
 	private TimeSeriesService timeSeriesService;
@@ -23,7 +26,7 @@ public class KafkaConsumer {
 	
 	@KafkaListener(topics = "data-topic", groupId = "tseries-group", containerFactory = "kafkaListenerContainerFactory")
 	public void consumeJson(TimeseriesData data) {
-		System.out.println("1 TSERIES SERVICE Consumed JSON Message: " + "guid=" + data.getGuid()  + " timestamp=" + data.getTimestamp() 
+		logger.log(Level.INFO, "TSERIES SERVICE Consumed JSON Message: " + "guid=" + data.getGuid()  + " timestamp=" + data.getTimestamp() 
 		+ " type=" + data.getType()  + " value=" + data.getValue());
 		
 		timeSeriesService.save(data);
@@ -31,8 +34,8 @@ public class KafkaConsumer {
 
 	@KafkaListener(topics = "notification-topic", groupId = "tseries-group", containerFactory = "kafkaEventListenerContainerFactory")
 	public void consumeJson(DataFileEvent event) {
-		System.out.println("2 TSERIES SERVICE Consumed JSON Message: " + " topic=" + event.getTopic() 
-		+ " type=" + event.getType());
+		logger.log(Level.INFO, "TSERIES SERVICE Consumed JSON Message: " + " topic=" + event.getTopic() 
+		+ " type=" + event.getType() + " file = " + event.getFileName());
 		
 		if ("Data File Processed".equals(event.getType())) {
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
