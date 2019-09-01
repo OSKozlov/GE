@@ -10,23 +10,29 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "auth_user")
 public class User {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "auth_user_id")
 	private int id;
-	
+
 	@Column(name = "first_name")
 	private String name;
-	
+
 	@Column(name = "last_name")
-	private String last_name;
-	
+	private String lastName;
+
 	@Column(name = "email")
 	private String email;
-	
+
 	@Column(name = "password")
 	private String password;
+
+	@Column(name = "status")
+	private String status;
+	
+	@Column(name = "role")
+	private String role;
 
 	public int getId() {
 		return id;
@@ -44,12 +50,12 @@ public class User {
 		this.name = name;
 	}
 
-	public String getLast_name() {
-		return last_name;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setLast_name(String last_name) {
-		this.last_name = last_name;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getEmail() {
@@ -66,6 +72,22 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 }
