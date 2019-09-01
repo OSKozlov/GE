@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name = "user")
+@Table(name = "auth_user")
 public class User {
 
 	@Id
