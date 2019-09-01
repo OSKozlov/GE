@@ -1,10 +1,13 @@
 package com.lux.ge.facade.model;
  
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -14,36 +17,36 @@ public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "auth_role_id")
-	private int id;
+	private Long id;
 	
-	@Column(name = "role_name")
-	private String role;
+	@Column(name = "name")
+	private String name;
 	
-	@Column(name = "role_desc")
-	private String desc;
+	@ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getRole() {
-		return role;
+	public String getName() {
+		return name;
 	}
 
-	public void setRole(String role) {
-		this.role = role;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getDesc() {
-		return desc;
+	public Set<User> getUsers() {
+		return users;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setUsers(Set<User> users) {
+		this.users = users;
 	}
-	
+
 }
