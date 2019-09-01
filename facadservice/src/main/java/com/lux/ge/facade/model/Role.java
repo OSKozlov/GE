@@ -11,12 +11,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "auth_role")
+@Table(name = "role")
 public class Role {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "auth_role_id")
+	@Column(name = "id")
 	private Long id;
 	
 	@Column(name = "name")

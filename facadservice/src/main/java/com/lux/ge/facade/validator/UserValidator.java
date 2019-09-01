@@ -1,6 +1,7 @@
 package com.lux.ge.facade.validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -8,6 +9,7 @@ import org.springframework.validation.Validator;
 import com.lux.ge.facade.model.User;
 import com.lux.ge.facade.services.UserService;
 
+@Component
 public class UserValidator implements Validator {
 
 	@Autowired

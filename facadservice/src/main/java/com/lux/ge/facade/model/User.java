@@ -12,12 +12,12 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name = "auth_user")
+@Table(name = "user")
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "auth_user_id")
+	@Column(name = "id")
 	private Long id;
 
 	@Column(name = "username")
