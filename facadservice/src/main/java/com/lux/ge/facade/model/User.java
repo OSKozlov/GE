@@ -29,9 +29,9 @@ public class User {
 	@Transient
 	@Column(name = "passwordConfirm")
 	private String passwordConfirm;
-
-	@ManyToMany
-    private Set<Role> roles;
+	
+	@Column(name = "role")
+	private String role;
 
 	public Long getId() {
 		return id;
@@ -65,12 +65,12 @@ public class User {
 		this.passwordConfirm = passwordConfirm;
 	}
 
-	public Set<Role> getRoles() {
-		return roles;
+	public String getRole() {
+		return role;
 	}
 
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 }

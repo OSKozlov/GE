@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.lux.ge.facade.model.Role;
 import com.lux.ge.facade.model.User;
 import com.lux.ge.facade.repository.UserRepository;
 
@@ -29,9 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if (user == null) throw new UsernameNotFoundException(username);
 		
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-		for(Role role : user.getRoles()) {
-			grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-		}
+		grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole()));
 		
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
 	}

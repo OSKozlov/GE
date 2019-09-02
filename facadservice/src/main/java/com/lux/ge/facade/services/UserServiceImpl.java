@@ -1,11 +1,10 @@
 package com.lux.ge.facade.services;
 
-import java.util.HashSet;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.lux.ge.facade.model.RoleType;
 import com.lux.ge.facade.model.User;
 import com.lux.ge.facade.repository.RoleRepository;
 import com.lux.ge.facade.repository.UserRepository;
@@ -25,7 +24,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void save(User user) {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		user.setRoles(new HashSet<>(roleRepository.findAll()));
+		user.setRole(RoleType.ENGINEER_USER.getRoleName());
 		userRepository.save(user);
 	}
 
