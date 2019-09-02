@@ -7,16 +7,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 public class FacadeController {
-	
+
 	@RequestMapping("/test")
-    @ResponseBody
-    public String test() {
-        return "Test is ok!";
-    }
+	@ResponseBody
+	public String test() {
+		return "Test is ok!";
+	}
 
 	@RequestMapping("/healthcheck")
-    public ModelAndView healthCheck() {
+	public ModelAndView healthCheck() {
 		return new ModelAndView("healthcheck");
-    }
+	}
 
 }

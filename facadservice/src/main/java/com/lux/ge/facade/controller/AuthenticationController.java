@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.lux.ge.facade.model.RoleType;
 import com.lux.ge.facade.model.User;
 import com.lux.ge.facade.services.SecurityService;
 import com.lux.ge.facade.services.UserService;
@@ -63,5 +64,53 @@ public class AuthenticationController {
     public ModelAndView welcome(Model model) {
         return new ModelAndView("welcome");
     }
+    
+	@PostMapping({ "/events" })
+	public ModelAndView displayEvents(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
+
+		userValidator.validate(userForm, bindingResult);
+
+		if (bindingResult.hasErrors()) {
+			return new ModelAndView("welcome");
+		}
+
+		if (!RoleType.ADMIN_USER.getRoleName().equals(userForm.getRole())) {
+			return new ModelAndView("welcome");
+		}
+		
+		return new ModelAndView("events");
+	}
+
+	@PostMapping({ "/messages" })
+	public ModelAndView displayMessages(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
+
+		userValidator.validate(userForm, bindingResult);
+
+		if (bindingResult.hasErrors()) {
+			return new ModelAndView("welcome");
+		}
+		
+		if (!RoleType.ENGINEER_USER.getRoleName().equals(userForm.getRole())) {
+			return new ModelAndView("welcome");
+		}
+
+		return new ModelAndView("events");
+	}
+
+	@PostMapping({ "/statistic" })
+	public ModelAndView displayStatistic(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
+
+		userValidator.validate(userForm, bindingResult);
+
+		if (bindingResult.hasErrors()) {
+			return new ModelAndView("welcome");
+		}
+		
+		if (!RoleType.ENGINEER_USER.getRoleName().equals(userForm.getRole())) {
+			return new ModelAndView("welcome");
+		}
+
+		return new ModelAndView("statistic");
+	}
 
 }
