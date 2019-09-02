@@ -1,6 +1,7 @@
 package com.lux.ge.facade.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,15 +67,13 @@ public class AuthenticationController {
     }
     
 	@PostMapping({ "/events" })
-	public ModelAndView displayEvents(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
-
-		userValidator.validate(userForm, bindingResult);
-
-		if (bindingResult.hasErrors()) {
-			return new ModelAndView("welcome");
-		}
-
-		if (!RoleType.ADMIN_USER.getRoleName().equals(userForm.getRole())) {
+	public ModelAndView displayEvents(Model model) {
+		
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		User user = userService.findByUsername(userName);
+		
+		if (!RoleType.ADMIN_USER.getRoleName().equals(user.getRole())) {
 			return new ModelAndView("welcome");
 		}
 		
@@ -82,15 +81,13 @@ public class AuthenticationController {
 	}
 
 	@PostMapping({ "/messages" })
-	public ModelAndView displayMessages(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
+	public ModelAndView displayMessages(Model model) {
 
-		userValidator.validate(userForm, bindingResult);
-
-		if (bindingResult.hasErrors()) {
-			return new ModelAndView("welcome");
-		}
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		
-		if (!RoleType.ENGINEER_USER.getRoleName().equals(userForm.getRole())) {
+		User user = userService.findByUsername(userName);
+		
+		if (!RoleType.ENGINEER_USER.getRoleName().equals(user.getRole())) {
 			return new ModelAndView("welcome");
 		}
 
@@ -98,15 +95,13 @@ public class AuthenticationController {
 	}
 
 	@PostMapping({ "/statistic" })
-	public ModelAndView displayStatistic(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
+	public ModelAndView displayStatistic(Model model) {
 
-		userValidator.validate(userForm, bindingResult);
-
-		if (bindingResult.hasErrors()) {
-			return new ModelAndView("welcome");
-		}
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		
-		if (!RoleType.ENGINEER_USER.getRoleName().equals(userForm.getRole())) {
+		User user = userService.findByUsername(userName);
+		
+		if (!RoleType.ENGINEER_USER.getRoleName().equals(user.getRole())) {
 			return new ModelAndView("welcome");
 		}
 
