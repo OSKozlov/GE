@@ -1,5 +1,7 @@
 package com.lux.ge.stat.services;
 
+import java.util.List;
+
 import com.lux.ge.stat.model.StatData;
 import com.lux.ge.stat.model.TimeseriesData;
 
@@ -37,5 +39,12 @@ public interface StatService {
 	 * @return
 	 */
 	StatData save(StatData data);
+	
+	/**
+	 * This method return all statistic prepared for each file.
+	 * 
+	 * @return statistic data
+	 */
+	List<StatData> findAll();
 	
 }

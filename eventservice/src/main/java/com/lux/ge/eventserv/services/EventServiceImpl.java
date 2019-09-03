@@ -1,5 +1,9 @@
 package com.lux.ge.eventserv.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,14 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public DataFileEvent save(DataFileEvent event) {
 		return eventRepository.save(event);
+	}
+
+	@Override
+	public List<DataFileEvent> findall() {
+		Iterable<DataFileEvent> events = eventRepository.findAll();
+		List<DataFileEvent> list = StreamSupport.stream(events.spliterator(), false).collect(Collectors.toList());
+		System.err.println("#### list = " + list.toString());
+		return list;
 	}
 
 }

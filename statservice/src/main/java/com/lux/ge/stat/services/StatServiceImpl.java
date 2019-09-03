@@ -1,6 +1,8 @@
 package com.lux.ge.stat.services;
 
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,14 @@ public class StatServiceImpl implements StatService {
 	@Override
 	public StatData save(StatData data) {
 		return statDataRepository.save(data);
+	}
+
+	@Override
+	public List<StatData> findAll() {
+		Iterable<StatData> statData = statDataRepository.findAll();
+		List<StatData> list = StreamSupport.stream(statData.spliterator(), false).collect(Collectors.toList());
+		System.err.println("#### list = " + list.toString());
+		return list;
 	}
 
 }

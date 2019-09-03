@@ -22,7 +22,7 @@
 				<th>value</th>
 				<th>fileName</th>
 			</tr>
-			<c:forEach items="${messages.contacts}" var="message">
+			<c:forEach items="${messages}" var="message">
 				<tr>
 					<td>${message.guid}</td>
 					<td>${message.timestamp}</td>

@@ -1,16 +1,33 @@
 package com.lux.ge.facade.controller;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.jboss.logging.Logger;
+import org.jboss.logging.Logger.Level;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lux.ge.facade.model.DataFileEvent;
 import com.lux.ge.facade.model.RoleType;
+import com.lux.ge.facade.model.StatData;
+import com.lux.ge.facade.model.TimeseriesData;
 import com.lux.ge.facade.model.User;
 import com.lux.ge.facade.services.SecurityService;
 import com.lux.ge.facade.services.UserService;
@@ -27,6 +44,12 @@ public class AuthenticationController {
 
     @Autowired
     private UserValidator userValidator;
+    
+    private HttpHeaders headers = new HttpHeaders();
+    
+	private RestTemplate restTemplate = new RestTemplate();
+	
+	private Logger logger = Logger.getLogger(AuthenticationController.class.getName());
 
     @GetMapping("/registration")
     public ModelAndView registration(Model model) {
@@ -77,7 +100,24 @@ public class AuthenticationController {
 			return new ModelAndView("welcome");
 		}
 		
-		return new ModelAndView("events");
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://127.0.0.1:8083/getEvents", requestEntity, String.class);
+        
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<DataFileEvent> dataFileEvent = null;
+        try {
+			dataFileEvent = objectMapper.readValue(response.getBody(), new TypeReference<List<DataFileEvent>>() {});
+		} catch (IOException e) {
+			logger.log(Level.WARN, "Error occured while retrieve data from server. ", e);
+		}
+        
+        ModelAndView modelAndView = new ModelAndView("events");
+        modelAndView.addObject("events", dataFileEvent);
+        
+		return modelAndView;
 	}
 
 	@PostMapping({ "/messages" })
@@ -91,7 +131,23 @@ public class AuthenticationController {
 			return new ModelAndView("welcome");
 		}
 
-		return new ModelAndView("messages");
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://127.0.0.1:8084/getRawData", requestEntity, String.class);
+        
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<TimeseriesData> dataFileEvent = null;
+        try {
+			dataFileEvent = objectMapper.readValue(response.getBody(), new TypeReference<List<TimeseriesData>>() {});
+		} catch (IOException e) {
+			logger.log(Level.WARN, "Error occured while retrieve data from server. ", e);
+		}
+        
+        ModelAndView modelAndView = new ModelAndView("messages");
+        modelAndView.addObject("messages", dataFileEvent);
+        
+		return modelAndView;
 	}
 
 	@PostMapping({ "/statistic" })
@@ -105,7 +161,23 @@ public class AuthenticationController {
 			return new ModelAndView("welcome");
 		}
 
-		return new ModelAndView("statistic");
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://127.0.0.1:8084/getStatistic", requestEntity, String.class);
+        
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<StatData> dataFileEvent = null;
+        try {
+			dataFileEvent = objectMapper.readValue(response.getBody(), new TypeReference<List<StatData>>() {});
+		} catch (IOException e) {
+			logger.log(Level.WARN, "Error occured while retrieve data from server. ", e);
+		}
+        
+        ModelAndView modelAndView = new ModelAndView("statistic");
+        modelAndView.addObject("statistics", dataFileEvent);
+        
+		return modelAndView;
 	}
 
 }
