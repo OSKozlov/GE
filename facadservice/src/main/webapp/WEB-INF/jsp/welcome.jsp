@@ -17,10 +17,14 @@
 	</form>
 
 	<form id="messagesForm" method="POST" action="${contextPath}/messages">
+		<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
 	</form>
 
-	<form id="statisticForm" method="POST"
-		action="${contextPath}/statistic"></form>
+	<form id="statisticForm" method="POST" action="${contextPath}/statistic">
+		<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+	</form>
 		
 	<div class="container">
 		<c:if test="${pageContext.request.userPrincipal.name != null}">

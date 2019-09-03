@@ -91,7 +91,7 @@ public class AuthenticationController {
 			return new ModelAndView("welcome");
 		}
 
-		return new ModelAndView("events");
+		return new ModelAndView("messages");
 	}
 
 	@PostMapping({ "/statistic" })

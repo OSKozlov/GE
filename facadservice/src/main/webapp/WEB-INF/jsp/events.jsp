@@ -30,6 +30,8 @@
                 </tr>
             </c:forEach>
         </table>
+        <br/>
+		<input type="button" value="Back" onclick="javascript:history.back()"/>
     </div>
 </body>
 </html>
