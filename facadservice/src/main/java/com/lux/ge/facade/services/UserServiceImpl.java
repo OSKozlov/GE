@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.lux.ge.facade.model.RoleType;
 import com.lux.ge.facade.model.User;
-import com.lux.ge.facade.repository.RoleRepository;
 import com.lux.ge.facade.repository.UserRepository;
 
 @Service
@@ -14,9 +13,6 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
-
-	@Autowired
-	private RoleRepository roleRepository;
 	
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
