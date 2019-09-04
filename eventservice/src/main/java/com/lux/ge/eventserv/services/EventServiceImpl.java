@@ -25,7 +25,6 @@ public class EventServiceImpl implements EventService {
 	public List<DataFileEvent> findall() {
 		Iterable<DataFileEvent> events = eventRepository.findAll();
 		List<DataFileEvent> list = StreamSupport.stream(events.spliterator(), false).collect(Collectors.toList());
-		System.err.println("#### list = " + list.toString());
 		return list;
 	}
 

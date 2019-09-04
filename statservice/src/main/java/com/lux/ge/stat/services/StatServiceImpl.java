@@ -51,7 +51,6 @@ public class StatServiceImpl implements StatService {
 	public List<StatData> findAll() {
 		Iterable<StatData> statData = statDataRepository.findAll();
 		List<StatData> list = StreamSupport.stream(statData.spliterator(), false).collect(Collectors.toList());
-		System.err.println("#### list = " + list.toString());
 		return list;
 	}
 

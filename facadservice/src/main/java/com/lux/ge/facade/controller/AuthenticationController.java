@@ -6,6 +6,7 @@ import java.util.List;
 import org.jboss.logging.Logger;
 import org.jboss.logging.Logger.Level;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -36,6 +37,9 @@ import com.lux.ge.facade.validator.UserValidator;
 @RestController
 public class AuthenticationController {
 
+    @Autowired 
+    private Environment env;
+    
     @Autowired
     private UserService userService;
 
@@ -44,8 +48,6 @@ public class AuthenticationController {
 
     @Autowired
     private UserValidator userValidator;
-    
-    private HttpHeaders headers = new HttpHeaders();
     
 	private RestTemplate restTemplate = new RestTemplate();
 	
@@ -100,11 +102,7 @@ public class AuthenticationController {
 			return new ModelAndView("welcome");
 		}
 		
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity("http://127.0.0.1:8083/getEvents", requestEntity, String.class);
+		ResponseEntity<String> response = sendRequest(env.getProperty("eventsrv") + "/getEvents");
         
         ObjectMapper objectMapper = new ObjectMapper();
         List<DataFileEvent> dataFileEvent = null;
@@ -131,10 +129,7 @@ public class AuthenticationController {
 			return new ModelAndView("welcome");
 		}
 
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity("http://127.0.0.1:8084/getRawData", requestEntity, String.class);
+		ResponseEntity<String> response = sendRequest(env.getProperty("statsrv") + "/getRawData");
         
         ObjectMapper objectMapper = new ObjectMapper();
         List<TimeseriesData> dataFileEvent = null;
@@ -160,12 +155,9 @@ public class AuthenticationController {
 		if (!RoleType.ENGINEER_USER.getRoleName().equals(user.getRole())) {
 			return new ModelAndView("welcome");
 		}
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity("http://127.0.0.1:8084/getStatistic", requestEntity, String.class);
         
+		ResponseEntity<String> response = sendRequest(env.getProperty("statsrv") + "/getStatistic");
+		
         ObjectMapper objectMapper = new ObjectMapper();
         List<StatData> dataFileEvent = null;
         try {
@@ -178,6 +170,15 @@ public class AuthenticationController {
         modelAndView.addObject("statistics", dataFileEvent);
         
 		return modelAndView;
+	}
+	
+	private ResponseEntity<String> sendRequest(String url) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+		ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
+		return response;
 	}
 
 }
