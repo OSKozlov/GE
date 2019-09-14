@@ -1,0 +1,28 @@
+version: '3'
+services:
+    db:
+      image: postgres
+      container_name: postgres_ge
+      ports:
+        - 5432:5432
+      #volumes:
+       # - ./pg_data:/var/lib/postgresql/data/pgdata
+      environment:
+        POSTGRES_PASSWORD: admin
+        POSTGRESS_DB: userdb
+        #PGDATA: /var/lib/postgresql/data/pgdata
+      restart: always
+    app:
+        build:
+            context: ./facadservice/
+            dockerfile: Dockerfile
+        image: facadservice
+        container_name: facadservice_ge
+        ports:
+          - "9095:8085"
+        environment:
+            POSTGRESS_HOST: db #postgres://admin:admin@db:5432/userdb     
+        restart: always
+        links: 
+          - db        
+        
