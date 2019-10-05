@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping("kafka")
 public class FileProcessorController {
 	
 	@RequestMapping("/test")
@@ -15,7 +14,7 @@ public class FileProcessorController {
         return "Test is ok!";
     }
 
-	@RequestMapping("/healthcheck.html")
+	@RequestMapping("/healthcheck")
     public ModelAndView healthCheck() {
 		return new ModelAndView("healthcheck");
     }
