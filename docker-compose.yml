@@ -1,28 +1,92 @@
-version: '3'
+version: '3.6'
 services:
+    #postgres init
     db:
+      build:
+          context: ./facadservice/db/
+          dockerfile: Dockerfile
       image: postgres
       container_name: postgres_ge
       ports:
-        - 5432:5432
-      #volumes:
-       # - ./pg_data:/var/lib/postgresql/data/pgdata
+        - 5432:5432 
+      volumes:
+        - ./my-vol:/data
       environment:
+        POSTGRES_USER: admin
         POSTGRES_PASSWORD: admin
         POSTGRESS_DB: userdb
-        #PGDATA: /var/lib/postgresql/data/pgdata
       restart: always
-    app:
+    
+    #cassandra init
+    cassandra:
+      image: cassandra:latest
+      container_name: cassandra_ge
+      ports:
+        - 9042:9042
+      environment:
+        - "MAX_HEAP_SIZE=256M"
+        - "HEAP_NEWSIZE=128M"
+      restart: always
+    
+    #kafka init, depends on zookeeper
+    zookeeper:
+      image: wurstmeister/zookeeper
+      ports:
+        - 2181:2181
+      container_name: zookeeper_ge
+    
+    kafka:
+      build:
+          context: kafka
+          dockerfile: Dockerfile
+      links:
+        - zookeeper:zk
+      container_name: kafka_ge
+      ports:
+        - 9092:9092
+      environment:
+        #KAFKA_ADVERTISED_HOST_NAME: $CF_HOST_IP
+        KAFKA_ZOOKEEPER_CONNECT: zk:2181
+        KAFKA_MESSAGE_MAX_BYTES: 2000000
+        KAFKA_CREATE_TOPICS: "Topic1:1:1"
+      #volumes:
+      #- /var/run/docker.sock:/var/run/docker.sock
+      depends_on:
+        - zookeeper
+        
+    #file processor service init
+    fileprocsrv:
+        build:
+            context: ./fileprocservice/
+            dockerfile: Dockerfile
+        image: fileprocservice
+        container_name: fileprocservice_ge
+        ports:
+          - "8081:8081"
+        restart: always
+        
+    #event service init
+    eventsrv:
+        build:
+            context: ./eventservice/
+            dockerfile: Dockerfile
+        image: eventservice
+        container_name: eventservice_ge
+        ports:
+          - "8083:8083"
+        restart: always
+        
+    #facad service init
+    facadsrv:
         build:
             context: ./facadservice/
             dockerfile: Dockerfile
         image: facadservice
         container_name: facadservice_ge
         ports:
-          - "9095:8085"
+          - "8085:8085"
         environment:
-            POSTGRESS_HOST: db #postgres://admin:admin@db:5432/userdb     
+            POSTGRESS_HOST: db 
         restart: always
         links: 
-          - db        
-        
+          - db  
