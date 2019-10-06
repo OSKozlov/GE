@@ -41,9 +41,9 @@ services:
       depends_on:
         - zookeeper
       ports:
-        - "9092:9092"
+        - 9092:9092
       environment:
-        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_ge:9092
         KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
         KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
         
@@ -55,7 +55,7 @@ services:
         image: fileprocservice
         container_name: fileprocservice_ge
         ports:
-          - "8081:8081"
+          - 8081:8081
         restart: always
         
     #tseries service init
@@ -66,7 +66,7 @@ services:
         image: tseriesservice
         container_name: tseriesservice_ge
         ports:
-          - "8082:8082"
+          - 8082:8082
         restart: always
         
     #event service init
@@ -77,19 +77,19 @@ services:
         image: eventservice
         container_name: eventservice_ge
         ports:
-          - "8083:8083"
+          - 8083:8083
         restart: always
         
     #stat service init
-    #statsrv:
-    #    build:
-    #        context: ./statservice/
-    #        dockerfile: Dockerfile
-    #    image: statservice
-    #    container_name: statservice_ge
-    #    ports:
-    #      - "8084:8084"
-    #    restart: always
+    statsrv:
+        build:
+            context: ./statservice/
+            dockerfile: Dockerfile
+        image: statservice
+        container_name: statservice_ge
+        ports:
+          - 8084:8084
+        restart: always
         
     #facad service init
     facadsrv:
@@ -99,7 +99,7 @@ services:
         image: facadservice
         container_name: facadservice_ge
         ports:
-          - "8085:8085"
+          - 8085:8085
         environment:
             POSTGRESS_HOST: db 
         restart: always
