@@ -8,6 +8,7 @@ import org.springframework.data.cassandra.config.SchemaAction;
 public class CassandraConfig extends AbstractCassandraConfiguration {
 
 	public static final String KEYSPACE = "timeseries";
+	public static final String CONTACT_POINTS = "cassandra";
 	
 	@Override
 	public SchemaAction getSchemaAction() {
@@ -17,6 +18,11 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 	@Override
 	protected String getKeyspaceName() {
 		return KEYSPACE;
+	}
+
+	@Override
+	protected String getContactPoints() {
+		return CONTACT_POINTS;
 	}
 
 }
