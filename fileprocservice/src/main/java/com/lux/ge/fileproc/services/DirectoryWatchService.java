@@ -54,7 +54,9 @@ public class DirectoryWatchService {
 	private static Logger logger = Logger.getLogger(DirectoryWatchService.class.getName());
 
 	public DirectoryWatchService() {
-		this.dir = Paths.get("files");
+		String home = System.getProperty("user.home");
+		this.dir = Paths.get(home + File.separator + "files-ge");
+		logger.log(Level.INFO, "Look files in the directory: " + dir);
 		registerDirectory(dir);
 	}
 	
