@@ -16,6 +16,8 @@ services:
         POSTGRES_PASSWORD: admin
         POSTGRESS_DB: userdb
       restart: always
+      networks:
+        - localnetwork
     
     #cassandra init
     cassandra:
@@ -29,14 +31,18 @@ services:
         - "MAX_HEAP_SIZE=256M"
         - "HEAP_NEWSIZE=128M"
       restart: always
-    
+      networks:
+        - localnetwork
+        
     #kafka init, depends on zookeeper
     zookeeper:
       image: wurstmeister/zookeeper:3.4.6
       container_name: zookeeper_ge
       expose:
         - 2181
-
+      networks:
+        - localnetwork
+        
     kafka:
       image: wurstmeister/kafka:2.11-2.0.0
       container_name: kafka_ge
@@ -49,7 +55,9 @@ services:
         KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_ge:9092
         KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
         KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-        
+      networks:
+        - localnetwork    
+    
     #file processor service init
     fileprocsrv:
         build:
@@ -60,6 +68,8 @@ services:
         ports:
           - 8081:8081
         restart: always
+        networks:
+          - localnetwork
         
     #tseries service init
     tseriessrv:
@@ -75,6 +85,8 @@ services:
         restart: always
         depends_on: 
           - cassandra
+        networks:
+          - localnetwork
         
     #event service init
     eventsrv:
@@ -86,6 +98,8 @@ services:
         ports:
           - 8083:8083
         restart: always
+        networks:
+          - localnetwork
         
     #stat service init
     statsrv:
@@ -101,6 +115,8 @@ services:
         restart: always
         depends_on: 
           - cassandra
+        networks:
+          - localnetwork
         
     #facad service init
     facadsrv:
@@ -114,5 +130,10 @@ services:
         environment:
             POSTGRESS_HOST: db
         restart: always
-        links: 
-          - db  
+        depends_on: 
+          - db
+        networks:
+          - localnetwork          
+          
+networks:
+    localnetwork:
