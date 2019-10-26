@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "datafileevent")
+@Table(name = "datafileevent", schema = "public")
 public class DataFileEvent {
 	
 	@Id
