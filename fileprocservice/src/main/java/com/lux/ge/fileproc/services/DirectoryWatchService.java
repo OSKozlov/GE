@@ -56,6 +56,10 @@ public class DirectoryWatchService {
 	public DirectoryWatchService() {
 		String home = System.getProperty("user.home");
 		this.dir = Paths.get(home + File.separator + "files-ge");
+		File directory = new File(String.valueOf(dir.toString()));
+		if (!directory.exists()) {
+			directory.mkdir();
+		}
 		logger.log(Level.INFO, "Look files in the directory: " + dir);
 		registerDirectory(dir);
 	}
