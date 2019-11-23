@@ -43,6 +43,8 @@ public class DirectoryWatchService {
 	
 	private static final String TOPIC_DATA = "data-topic";
 	private static final String TOPIC_NOTIFICATION = "notification-topic";
+	private static final int TIMER_DELAY = 5000;
+	private static final int TIMER_INTERVAL = 1000;
 	
 
 	@Autowired
@@ -66,9 +68,6 @@ public class DirectoryWatchService {
 	
 	public void processEvents() {
 		WatchKey watchKey;
-		int delay = 5000;
-		int interval = 1000;
-		Timer timer = new Timer();
 		
 		try {
 			watchKey = service.take();
@@ -77,30 +76,34 @@ public class DirectoryWatchService {
 				for (WatchEvent<?> event : watchKey.pollEvents()) {
 					WatchEvent.Kind<?> kind = event.kind();
 					Path eventPath = (Path) event.context();
-					System.out.println(eventDir + ": " + kind + ": " + eventPath.getFileName().toString());
-					if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-						sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.NEW_DATA_FILE_PROCESSING.getValue(), eventPath.getFileName().toString());
-						
-						timeseriesData = readFile(eventPath.getFileName().toString());
-
-						timer.scheduleAtFixedRate(new TimerTask() {
-							public void run() {
-								TimeseriesData data = timeseriesData.poll();
-								if (data != null) {
-									kafkaTemplate.send(TOPIC_DATA, data);
-								} else {
-									sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.DATA_FILE_PROCESSED.getValue(), eventPath.getFileName().toString());
-									timer.cancel();
-								}
-							}
-						}, delay, interval);
-						
+					logger.log(Level.INFO, eventDir + ": " + kind + ": " + eventPath.getFileName().toString());
+					if (kind == StandardWatchEventKinds.ENTRY_CREATE) {						
+						fileProcessor(eventPath.getFileName().toString());
 					}
 				}
 			} while (watchKey.reset());
 		} catch (InterruptedException | IOException e) {
 			logger.log(Level.WARNING, "Interrupted error occured while watching folder.", e);
 		}
+	}
+
+	public void fileProcessor(String fileName) throws IOException {
+		Timer timer = new Timer();
+//		sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.NEW_DATA_FILE_PROCESSING.getValue(), fileName);
+		
+		timeseriesData = readFile(fileName);
+
+		timer.scheduleAtFixedRate(new TimerTask() {
+			public void run() {
+				TimeseriesData data = timeseriesData.poll();
+				if (data != null) {
+					kafkaTemplate.send(TOPIC_DATA, data);
+				} else {
+//					sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.DATA_FILE_PROCESSED.getValue(), fileName);
+					timer.cancel();
+				}
+			}
+		}, TIMER_DELAY, TIMER_INTERVAL);
 	}
 
 	private void registerDirectory(Path path) {
