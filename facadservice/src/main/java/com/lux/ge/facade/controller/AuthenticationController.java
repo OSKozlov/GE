@@ -91,7 +91,7 @@ public class AuthenticationController {
         return new ModelAndView("welcome");
     }
     
-	@PostMapping({ "/events" })
+	@GetMapping({ "/events" })
 	public ModelAndView displayEvents(Model model) {
 		
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -118,7 +118,7 @@ public class AuthenticationController {
 		return modelAndView;
 	}
 
-	@PostMapping({ "/messages" })
+	@GetMapping({ "/messages" })
 	public ModelAndView displayMessages(Model model) {
 
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -145,7 +145,7 @@ public class AuthenticationController {
 		return modelAndView;
 	}
 
-	@PostMapping({ "/statistic" })
+	@GetMapping({ "/statistic" })
 	public ModelAndView displayStatistic(Model model) {
 
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -173,11 +173,7 @@ public class AuthenticationController {
 	}
 	
 	private ResponseEntity<String> sendRequest(String url) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-		ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 		return response;
 	}
 

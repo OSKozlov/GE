@@ -35,13 +35,13 @@ public class StatController {
         return "Test is ok!";
     }
 
-	@RequestMapping(value = "/getStatistic", method = RequestMethod.POST)
+	@RequestMapping(value = "/getStatistic", method = RequestMethod.GET)
     @ResponseBody
     public List<StatData> getStatistic() {
 		return statService.findAll();	
 	}
 	
-	@RequestMapping(value = "/getRawData", method = RequestMethod.POST)
+	@RequestMapping(value = "/getRawData", method = RequestMethod.GET)
     @ResponseBody
     public List<TimeseriesData> getRawData() {
 		Iterable<TimeseriesData> timeSeriesData = timeSeriesService.findAll();

@@ -11,17 +11,17 @@
 	rel="stylesheet">
 </head>
 <body>
-	<form id="eventsForm" method="POST" action="${contextPath}/events">
+	<form id="eventsForm" method="GET" action="${contextPath}/events">
 		<input type="hidden" name="${_csrf.parameterName}"
 					value="${_csrf.token}" />
 	</form>
 
-	<form id="messagesForm" method="POST" action="${contextPath}/messages">
+	<form id="messagesForm" method="GET" action="${contextPath}/messages">
 		<input type="hidden" name="${_csrf.parameterName}"
 					value="${_csrf.token}" />
 	</form>
 
-	<form id="statisticForm" method="POST" action="${contextPath}/statistic">
+	<form id="statisticForm" method="GET" action="${contextPath}/statistic">
 		<input type="hidden" name="${_csrf.parameterName}"
 						value="${_csrf.token}" />
 	</form>

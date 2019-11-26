@@ -22,8 +22,6 @@ public class EventServController {
     @ResponseBody
     public String test() {
 		
-		System.err.println("######## test RUN #######");
-		
 		DataFileEvent event = new DataFileEvent();
 		event.setId(23);
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -35,7 +33,7 @@ public class EventServController {
         return "Test is ok!";
     }
 	
-	@RequestMapping(value = "/getEvents", method = RequestMethod.POST)
+	@RequestMapping(value = "/getEvents", method = RequestMethod.GET)
     @ResponseBody
     public List<DataFileEvent> getEvents() {
 		return eventService.findall();	
