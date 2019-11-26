@@ -6,7 +6,7 @@ services:
           context: ./facadservice/db/
           dockerfile: Dockerfile
       image: postgres
-      container_name: postgres_ge
+      container_name: postgresge
       ports:
         - 5432:5432 
       volumes:
@@ -24,7 +24,7 @@ services:
       build:
           context: ./tseriesservice/cassandra/
           dockerfile: Dockerfile
-      container_name: cassandra_ge
+      container_name: cassandrage
       ports:
         - 9042:9042
       environment:
@@ -37,7 +37,7 @@ services:
     #kafka init, depends on zookeeper
     zookeeper:
       image: wurstmeister/zookeeper:3.4.6
-      container_name: zookeeper_ge
+      container_name: zookeeperge
       expose:
         - 2181
       networks:
@@ -45,14 +45,14 @@ services:
         
     kafka:
       image: wurstmeister/kafka:2.11-2.0.0
-      container_name: kafka_ge
+      container_name: kafkage
       depends_on:
         - zookeeper
       ports:
         - 9092:9092
       environment:
         KAFKA_CREATE_TOPICS: "data_topic:1:1,notification_topic:1:1"
-        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_ge:9092
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafkage:9092
         KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
         KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       networks:
@@ -64,7 +64,7 @@ services:
             context: ./fileprocservice/
             dockerfile: Dockerfile
         image: fileprocservice
-        container_name: fileprocservice_ge
+        container_name: fileprocservicege
         ports:
           - 8081:8081
         volumes:
@@ -79,7 +79,7 @@ services:
             context: ./tseriesservice/
             dockerfile: Dockerfile
         image: tseriesservice
-        container_name: tseriesservice_ge
+        container_name: tseriesservicege
         ports:
           - 8082:8082
         environment:
@@ -96,7 +96,7 @@ services:
             context: ./eventservice/
             dockerfile: Dockerfile
         image: eventservice
-        container_name: eventservice_ge
+        container_name: eventservicege
         ports:
           - 8083:8083
         restart: always
@@ -109,7 +109,7 @@ services:
             context: ./statservice/
             dockerfile: Dockerfile
         image: statservice
-        container_name: statservice_ge
+        container_name: statservicege
         ports:
           - 8084:8084
         environment:
@@ -126,7 +126,7 @@ services:
             context: ./facadservice/
             dockerfile: Dockerfile
         image: facadservice
-        container_name: facadservice_ge
+        container_name: facadservicege
         ports:
           - 8085:8085
         environment:
