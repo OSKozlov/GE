@@ -6,3 +6,8 @@ CREATE TABLE TimeSeriesData (
     type varchar,
     value float,
     fileName varchar);
+CREATE TABLE StatData (
+    fileName varchar PRIMARY KEY,
+    messageCount int,
+    maxTemperature float,
+    averageVoltage float);
