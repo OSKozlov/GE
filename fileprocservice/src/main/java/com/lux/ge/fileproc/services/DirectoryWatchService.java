@@ -89,7 +89,7 @@ public class DirectoryWatchService {
 
 	public void fileProcessor(String fileName) throws IOException {
 		Timer timer = new Timer();
-//		sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.NEW_DATA_FILE_PROCESSING.getValue(), fileName);
+		sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.NEW_DATA_FILE_PROCESSING.getValue(), fileName);
 		
 		timeseriesData = readFile(fileName);
 
@@ -99,7 +99,7 @@ public class DirectoryWatchService {
 				if (data != null) {
 					kafkaTemplate.send(TOPIC_DATA, data);
 				} else {
-//					sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.DATA_FILE_PROCESSED.getValue(), fileName);
+					sendNotificationEvent(TOPIC_NOTIFICATION, DataFileEventType.DATA_FILE_PROCESSED.getValue(), fileName);
 					timer.cancel();
 				}
 			}
