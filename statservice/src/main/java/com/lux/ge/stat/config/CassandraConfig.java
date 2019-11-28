@@ -17,8 +17,8 @@ import com.lux.ge.stat.converter.DateToTimestampConverter;
 @Configuration
 public class CassandraConfig extends AbstractCassandraConfiguration {
 
-	public static final String KEYSPACE = "timeseries";
-	public static final String CONTACT_POINTS = "cassandra";
+	private static final String KEYSPACE = "timeseries";
+	private static final String CONTACT_POINTS = "cassandra";
 
 	@Override
 	public SchemaAction getSchemaAction() {

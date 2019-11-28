@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lux.ge.stat.ApplicationContextProvider;
 import com.lux.ge.stat.model.StatData;
 import com.lux.ge.stat.model.TimeseriesData;
 import com.lux.ge.stat.services.StatService;
@@ -28,10 +27,6 @@ public class StatController {
 	@RequestMapping("/test")
     @ResponseBody
     public String test() {
-		
-		TimeSeriesService timeSeriesService = ApplicationContextProvider.getContext().getBean(TimeSeriesService.class);
-		Iterable<TimeseriesData> data = timeSeriesService.findAll();
-		System.out.println("$$$$$ data = " + data);
         return "Test is ok!";
     }
 
@@ -46,7 +41,6 @@ public class StatController {
     public List<TimeseriesData> getRawData() {
 		Iterable<TimeseriesData> timeSeriesData = timeSeriesService.findAll();
 		List<TimeseriesData> list = StreamSupport.stream(timeSeriesData.spliterator(), false).collect(Collectors.toList());
-		System.err.println("#### list = " + list.toString());
 		return list;
 	}
 	
