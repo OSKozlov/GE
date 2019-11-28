@@ -1,6 +1,11 @@
 package com.lux.ge.fileproc.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +35,15 @@ public class FileProcessorController {
 		if (directoryWatchService != null) {
 			try {
 				if (fileName != null) {
+					// copy file from dir "data" to "/root/file-ge"
+					logger.log(Level.INFO, "Copy file from dir 'data' to 'file-ge'");
+					Path sourceDir = Paths.get(File.separator + "data" + File.separator + fileName);
+					String home = System.getProperty("user.home");
+					Path destDir = Paths.get(home + File.separator + "files-ge" + File.separator + fileName);
+					Files.copy(sourceDir, destDir, StandardCopyOption.REPLACE_EXISTING);
+					
+					// process file
+					logger.log(Level.INFO, "Start process file");
 					directoryWatchService.fileProcessor(fileName);
 				}
 			} catch (IOException e) {
