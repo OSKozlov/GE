@@ -3,7 +3,7 @@ services:
     #postgres init
     db:
       build:
-          context: ./facadservice/db/
+          context: ./postgresdb/
           dockerfile: Dockerfile
       image: postgres
       container_name: postgresge
@@ -22,7 +22,7 @@ services:
     #cassandra init
     cassandra:
       build:
-          context: ./tseriesservice/cassandra/
+          context: ./cassandradb/
           dockerfile: Dockerfile
       container_name: cassandrage
       ports:
