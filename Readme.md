@@ -1,4 +1,4 @@
-#Steps (Workflow 1):
+# Steps (Workflow 1):
 1. Run docker compose with following command: "docker-compose -f docker-compose.yml up"
 2. Following containers will launched: 
 	postgresge, cassandrage, zookeeperge, kafkage, fileprocservicege, tsservicege, eventservicege, statservicege, facadservicege
@@ -14,7 +14,7 @@
 	Display list of messages
 	Display statistic    	
     	
-#Steps (Workflow 2):
+# Steps (Workflow 2):
 1. Run docker compose with following command: "docker-compose -f docker-compose.yml up"
 2. Following containers will launched: 
 	postgresge, cassandrage, zookeeperge, kafkage, fileprocservicege, tsservicege, eventservicege, statservicege, facadservicege
